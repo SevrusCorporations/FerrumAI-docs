@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation Versions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Consolas:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --gray-light: #e5e7eb;
+            --border-radius: 12px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+            color: var(--dark);
+        }
+
+        .container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        h1 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .subtitle {
+            color: var(--gray);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .search-box {
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 20px 14px 45px;
+            border: 1px solid var(--gray-light);
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: var(--light);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .versions-container {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .versions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .versions-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .versions-count {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-family: 'Consolas', monospace;
+        }
+
+        #versions-list {
+            list-style: none;
+            text-align: left;
+        }
+
+        #versions-list li {
+            margin: 12px 0;
+            padding: 16px 20px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid var(--gray-light);
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #versions-list li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-color: var(--primary);
+        }
+
+        .version-link {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            font-family: 'Consolas', monospace;
+        }
+
+        .version-link i {
+            margin-right: 12px;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .version-badges {
+            display: flex;
+            gap: 8px;
+        }
+
+        .latest-badge {
+            background: var(--secondary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .current-badge {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .beta-badge {
+            background: #f59e0b;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .alpha-badge {
+            background: #ef4444;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .loading {
+            color: var(--gray);
+            font-style: italic;
+            text-align: center;
+            padding: 30px;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .error {
+            color: #dc3545;
+            background: #fef2f2;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #ef4444;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .footer {
+            margin-top: 30px;
+            color: var(--gray);
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-info i {
+            color: var(--primary);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            color: var(--gray);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--gray-light);
+        }
+
+        .supporting-helper {
+            text-decoration: none;
+            font-weight: bold;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .supporting-helper:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 25px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .versions-container {
+                padding: 20px;
+            }
+            
+            #versions-list li {
+                padding: 14px 16px;
+            }
+            
+            .footer {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .versions-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            #versions-list li {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .version-badges {
+                align-self: flex-end;
+            }
+        }
+
+        /* Scrollbar Styling */
+        .versions-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .versions-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .versions-container::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .versions-container::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <h1>FerrumAI Documentation Hub</h1>
+            <p class="subtitle">Select your version to get started</p>
+            
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="version-search" placeholder="Search versions...">
+            </div>
+        </div>
+        
+        <div class="versions-container">
+            <div class="versions-header">
+                <div class="versions-title">Available Versions</div>
+                <div class="versions-count" id="versions-count">0 versions</div>
+            </div>
+            
+            <ul id="versions-list">
+                <li class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> Loading versions...
+                </li>
+            </ul>
+        </div>
+
+        <div id="error-message" style="display: none;" class="error"></div>
+        
+        <div class="footer">
+            <div class="footer-info">
+                <i class="fas fa-info-circle"></i>
+                <span>Made with help of <a class="supporting-helper" href="https://deepseek.com" target="_blank">DeepSeekAI</a></span>
+            </div>
+            <div class="footer-info">
+                <i class="fas fa-sync-alt"></i>
+                <span>Updated regularly</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // versions.js
+        class VersionManager {
+            constructor() {
+                this.versions = [];
+                this.filteredVersions = [];
+                this.currentVersion = this.getCurrentVersion();
+                this.searchInput = document.getElementById('version-search');
+            }
+
+            getCurrentVersion() {
+                const path = window.location.pathname;
+                const versionMatch = path.match(/\/(v[\d.-]+)\//);
+                return versionMatch ? versionMatch[1] : null;
+            }
+
+            async loadVersions() {
+                try {
+                    // Method 1: Try loading from versions.json first
+                    const response = await fetch('./versions.json');
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.versions = await this.validateVersions(data.versions);
+                    } else {
+                        throw new Error('versions.json not found');
+                    }
+                } catch (error) {
+                    console.log('versions.json not found, trying auto-detection');
+                    // Method 2: Auto-detect by checking common version patterns
+                    this.versions = await this.autoDetectVersions();
+                }
+
+                this.filteredVersions = [...this.versions];
+                this.displayVersions();
+                this.setupSearch();
+            }
+
+            setupSearch() {
+                if (this.searchInput) {
+                    this.searchInput.addEventListener('input', (e) => {
+                        const searchTerm = e.target.value.toLowerCase();
+                        this.filteredVersions = this.versions.filter(version => 
+                            version.toLowerCase().includes(searchTerm)
+                        );
+                        this.displayVersions();
+                    });
+                }
+            }
+
+            async validateVersions(versions) {
+                const validVersions = [];
+                
+                for (const version of versions) {
+                    if (await this.versionExists(version)) {
+                        validVersions.push(version);
+                    }
+                }
+                
+                return validVersions;
+            }
+
+            async versionExists(version) {
+                try {
+                    const response = await fetch(`./${version}/`, { method: 'HEAD' });
+                    return response.ok;
+                } catch (error) {
+                    return false;
+                }
+            }
+
+            async autoDetectVersions() {
+                const commonVersions = [
+                    'v2.0.0', 'v1.9.0', 'v1.8.0', 'v1.7.0', 'v1.6.0', 
+                    'v1.5.0', 'v1.4.0', 'v1.3.0', 'v1.2.0', 'v1.1.0', 'v1.0.0',
+                    'v1.0-beta', 'v1.0-alpha', 'v0.9.0', 'v0.8.0'
+                ];
+
+                const availableVersions = [];
+
+                for (const version of commonVersions) {
+                    if (await this.versionExists(version)) {
+                        availableVersions.push(version);
+                    }
+                }
+
+                return availableVersions;
+            }
+
+            sortVersions(versions) {
+                return versions.sort((a, b) => {
+                    const aParts = this.parseVersion(a);
+                    const bParts = this.parseVersion(b);
+                    
+                    if (bParts.major !== aParts.major) {
+                        return bParts.major - aParts.major;
+                    }
+                    
+                    if (bParts.minor !== aParts.minor) {
+                        return bParts.minor - aParts.minor;
+                    }
+                    
+                    if (bParts.patch !== aParts.patch) {
+                        return bParts.patch - aParts.patch;
+                    }
+                    
+                    if (aParts.prerelease && !bParts.prerelease) return 1;
+                    if (!aParts.prerelease && bParts.prerelease) return -1;
+                    
+                    return 0;
+                });
+            }
+
+            parseVersion(version) {
+                const match = version.match(/^v?(\d+)\.?(\d+)?\.?(\d+)?(-([a-z]+))?$/);
+                return {
+                    major: parseInt(match[1]) || 0,
+                    minor: parseInt(match[2]) || 0,
+                    patch: parseInt(match[3]) || 0,
+                    prerelease: match[5] || null
+                };
+            }
+
+            getVersionBadge(version) {
+                if (version.includes('alpha')) {
+                    return 'alpha-badge';
+                } else if (version.includes('beta')) {
+                    return 'beta-badge';
+                }
+                return '';
+            }
+
+            displayVersions() {
+                const versionsList = document.getElementById('versions-list');
+                const versionsCount = document.getElementById('versions-count');
+                const errorMessage = document.getElementById('error-message');
+                
+                if (!versionsList) return;
+
+                if (this.filteredVersions.length === 0) {
+                    versionsList.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-search"></i>
+                            <p>No versions found matching your search</p>
+                        </div>
+                    `;
+                    if (versionsCount) {
+                        versionsCount.textContent = '0 versions';
+                    }
+                    return;
+                }
+
+                const sortedVersions = this.sortVersions(this.filteredVersions);
+                const latestVersion = sortedVersions[0];
+
+                versionsList.innerHTML = sortedVersions.map(version => {
+                    const isLatest = version === latestVersion;
+                    const isCurrent = version === this.currentVersion;
+                    const versionBadge = this.getVersionBadge(version);
+                    
+                    return `
+                        <li>
+                            <a href="./${version}/" class="version-link">
+                                <i class="fas fa-code-branch"></i>
+                                ${version}
+                            </a>
+                            <div class="version-badges">
+                                ${isLatest ? '<span class="latest-badge">Latest</span>' : ''}
+                                ${isCurrent ? '<span class="current-badge">Current</span>' : ''}
+                                ${versionBadge ? `<span class="${versionBadge}">${version.includes('alpha') ? 'Alpha' : 'Beta'}</span>` : ''}
+                            </div>
+                        </li>
+                    `;
+                }).join('');
+
+                if (versionsCount) {
+                    versionsCount.textContent = `${this.filteredVersions.length} version${this.filteredVersions.length !== 1 ? 's' : ''}`;
+                }
+                
+                if (errorMessage) {
+                    errorMessage.style.display = 'none';
+                }
+            }
+
+            showError(message) {
+                const errorMessage = document.getElementById('error-message');
+                const versionsList = document.getElementById('versions-list');
+                const versionsCount = document.getElementById('versions-count');
+                
+                if (errorMessage) {
+                    errorMessage.innerHTML = `
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>${message}</p>
+                    `;
+                    errorMessage.style.display = 'block';
+                }
+                
+                if (versionsList) {
+                    versionsList.innerHTML = '<li class="error">Failed to load versions</li>';
+                }
+
+                if (versionsCount) {
+                    versionsCount.textContent = '0 versions';
+                }
+            }
+
+            async init() {
+                try {
+                    await this.loadVersions();
+                } catch (error) {
+                    this.showError('Error loading versions: ' + error.message);
+                }
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const versionManager = new VersionManager();
+            versionManager.init();
+        });
+    </script>
+</body>
+</html>
